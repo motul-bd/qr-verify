@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motul Verification</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f2f2f2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card{
+  background:#fff;
+  padding:25px 20px;
+  border-radius:18px;
+  width:95%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+
+.top-logo{
+  width:110px;
+  margin:0 auto 15px;
+}
+
+input{
+  width:90%;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  margin-top:10px;
+  padding:12px;
+  width:95%;
+  border:none;
+  background:#d60000;
+  color:#fff;
+  font-size:16px;
+  border-radius:8px;
+}
+
+.loader{
+  width:60px;
+  height:60px;
+  border:5px solid #eee;
+  border-top:5px solid #28a745;
+  border-radius:50%;
+  margin:20px auto;
+  animation:spin 0.6s linear infinite;
+}
+
+@keyframes spin{
+  100%{ transform:rotate(360deg); }
+}
+
+.icon{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  margin:20px auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:50px;
+  color:#fff;
+}
+
+.green{ background:#28a745; }
+.orange{ background:#ff8800; }
+
+.title{
+  font-size:24px;
+  font-weight:bold;
+}
+
+.desc{
+  font-size:15px;
+  color:#666;
+}
+
+.product-img{
+  width:240px;
+  margin:20px auto;
+}
+
+.box{
+  background:#fafafa;
+  padding:15px;
+  border-radius:12px;
+  text-align:left;
+  margin-top:10px;
+}
+
+.label{ color:#777; font-size:13px; }
+.value{ font-weight:bold; margin-bottom:10px; }
+
+.footer{
+  margin-top:10px;
+  font-size:13px;
+  color:#666;
+}
+
+.line-green{
+  height:4px;
+  background:#28a745;
+  border-radius:5px;
+  margin-top:10px;
+}
+
+.line-orange{
+  height:4px;
+  background:#ff8800;
+  border-radius:5px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <img src="https://lh3.googleusercontent.com/d/15SgtM-ZQeOE8rLKShidid8wtbBmBllDv" class="top-logo">
+
+  <input type="text" id="code" placeholder="Enter Serial Number">
+  <button onclick="verify()">Verify</button>
+
+  <div id="result"></div>
+
+</div>
+
+<script>
+function verify(){
+
+  let code = document.getElementById("code").value;
+
+  document.getElementById("result").innerHTML = '<div class="loader"></div>';
+
+  fetch("YOUR_SCRIPT_URL?code=" + code)
+  .then(res => res.json())
+  .then(data => {
+
+    if(data.status == "ok"){
+      showSuccess(data);
+    }
+    else if(data.status == "used"){
+      showUsed(data);
+    }
+    else{
+      showInvalid();
+    }
+
+  });
+
+}
+
+function showSuccess(d){
+  document.getElementById("result").innerHTML = `
+    <div class="icon green">✔</div>
+    <div class="title" style="color:#28a745;">Genuine Product</div>
+    <div class="desc">This product is authentic</div>
+
+    <img class="product-img" src="${d.image}">
+
+    <div class="box">
+      <div class="label">Serial Number</div>
+      <div class="value">${d.code}</div>
+
+      <div class="label">Product</div>
+      <div class="value">${d.product}</div>
+    </div>
+
+    <div class="line-green"></div>
+
+    <div class="footer">Verified by MOTUL</div>
+  `;
+}
+
+function showUsed(d){
+  document.getElementById("result").innerHTML = `
+    <div class="icon orange">!</div>
+    <div class="title" style="color:#ff8800;">Already Verified</div>
+    <div class="desc" style="color:red;">Warning: Fake Product</div>
+
+    <img class="product-img" src="${d.image}">
+
+    <div class="box">
+      <div class="label">Serial Number</div>
+      <div class="value">${d.code}</div>
+
+      <div class="label">Product</div>
+      <div class="value">${d.product}</div>
+    </div>
+
+    <div class="line-orange"></div>
+
+    <div class="footer">This code already used</div>
+  `;
+}
+
+function showInvalid(){
+  document.getElementById("result").innerHTML = `
+    <h2 style="color:red;">Invalid Serial Number</h2>
+  `;
+}
+</script>
+
+</body>
+</html>

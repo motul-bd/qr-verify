@@ -1,1 +1,87 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Product Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .box {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .result {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    .success {
+      color: #22c55e;
+    }
+
+    .error {
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h1>🔍 Verifying Product...</h1>
+    <div id="result" class="result">Please wait...</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (!code) {
+      document.getElementById("result").innerHTML = "❌ No Code Provided";
+      document.getElementById("result").classList.add("error");
+    } else {
+
+      fetch("https://script.google.com/macros/s/AKfycbxFOoUf5zBeCoew0FxXnGSR2mQQfisLaNxFhnrtN2OxojZFRwjpK6fmDl-xLN678a6w/exec?code=" + code)
+        .then(res => res.json())
+        .then(data => {
+
+          if (data.status === "success") {
+            document.getElementById("result").innerHTML = "✅ " + data.message;
+            document.getElementById("result").classList.add("success");
+
+          } else if (data.status === "invalid") {
+            document.getElementById("result").innerHTML = "❌ " + data.message;
+            document.getElementById("result").classList.add("error");
+
+          } else {
+            document.getElementById("result").innerHTML = "⚠️ " + data.message;
+            document.getElementById("result").classList.add("error");
+          }
+
+        })
+        .catch(err => {
+          document.getElementById("result").innerHTML = "❌ Server Error";
+          document.getElementById("result").classList.add("error");
+        });
+
+    }
+  </script>
+
+</body>
+</html>

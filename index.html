@@ -1,1 +1,39 @@
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxFOoUf5zBeCoew0FxXnGSR2mQQfisLaNxFhnrtN2OxojZFRwjpK6fmDl-xLN678a6w/exec";
 
+async function verifyProduct() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+
+  if (!code) {
+    showError("No Code Provided");
+    return;
+  }
+
+  try {
+    const res = await fetch(API_URL + "?code=" + code);
+    const data = await res.json();
+
+    if (data.status === "success") {
+      showSuccess(data.message);
+    } else if (data.status === "invalid") {
+      showError("Fake Product ❌");
+    } else {
+      showError(data.message);
+    }
+
+  } catch (err) {
+    showError("API not responding");
+  }
+}
+
+function showSuccess(msg) {
+  document.body.innerHTML = `<h2 style="color:green">${msg}</h2>`;
+}
+
+function showError(msg) {
+  document.body.innerHTML = `<h2 style="color:red">${msg}</h2>`;
+}
+
+verifyProduct();
+</script>

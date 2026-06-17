@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MOTUL Verification</title>
+<meta charset="UTF-8">
+<title>QR Verify</title>
 
 <style>
 body{
@@ -25,11 +25,6 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,0.12);
 }
 
-.top-logo{
-  width:110px;
-  margin-bottom:15px;
-}
-
 .loader{
   width:60px;
   height:60px;
@@ -43,46 +38,92 @@ body{
 @keyframes spin{
   100%{ transform:rotate(360deg); }
 }
+
+.icon{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  margin:20px auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:50px;
+  color:#fff;
+}
+
+.green{ background:#28a745; }
+.orange{ background:#ff8800; }
+
+.title{
+  font-size:24px;
+  font-weight:bold;
+}
+
+.desc{
+  font-size:15px;
+  color:#666;
+}
+
+.product-img{
+  width:240px;
+  margin:20px auto;
+}
+
+.box{
+  background:#fafafa;
+  padding:15px;
+  border-radius:12px;
+  text-align:left;
+  margin-top:10px;
+}
+
+.label{ color:#777; font-size:13px; }
+.value{ font-weight:bold; margin-bottom:10px; }
+
+.footer{
+  margin-top:10px;
+  font-size:13px;
+  color:#666;
+}
 </style>
+
 </head>
 
 <body>
 
-<div class="card" id="box">
-  <img src="https://lh3.googleusercontent.com/d/15SgtM-ZQeOE8rLKShidid8wtbBmBllDv" class="top-logo">
-
+<div class="card">
   <div id="loader" class="loader"></div>
-
-  <div id="manual" style="display:none;">
-    <input type="text" id="codeInput" placeholder="Enter Serial Number" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
-    <br><br>
-    <button onclick="goVerify()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#d60000;color:#fff;">Verify</button>
-  </div>
+  <div id="content" style="display:none;"></div>
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsxx8Y3GDcmrRXisxgA32RFcgFa22qk1VJAOwI55uYUM1N65Bjip-a0WDxufkb2tG5/exec";
 
-// URL থেকে code নেওয়া
+const API = "https://script.google.com/macros/s/AKfycbyxTdwY-SQQHNGGkgxuRTz4ktvsYt6JKV86SEY5INsh6O28saOAe9dA1BM3BWZj06VM/exec";
+
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-// যদি QR থেকে আসে
-if(code){
-  window.location.href = SCRIPT_URL + "?code=" + code;
-}else{
-  // না থাকলে manual input দেখাও
+if(!code){
   document.getElementById("loader").style.display="none";
-  document.getElementById("manual").style.display="block";
+  document.getElementById("content").innerHTML = "<h2>No Serial Found</h2>";
+  document.getElementById("content").style.display="block";
 }
 
-// manual verify
-function goVerify(){
-  const val = document.getElementById("codeInput").value.trim();
-  if(val){
-    window.location.href = SCRIPT_URL + "?code=" + val;
-  }
-}
+fetch(API + "?code=" + code)
+.then(res => res.text())
+.then(html => {
+  setTimeout(()=>{
+    document.getElementById("loader").style.display="none";
+    document.getElementById("content").innerHTML = html;
+    document.getElementById("content").style.display="block";
+  },800);
+})
+.catch(()=>{
+  document.getElementById("loader").style.display="none";
+  document.getElementById("content").innerHTML = "<h2 style='color:red;'>Server Error</h2>";
+  document.getElementById("content").style.display="block";
+});
+
 </script>
 
 </body>

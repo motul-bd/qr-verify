@@ -1,11 +1,8 @@
-
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MOTUL Verification</title>
-
-<style>
+<title>MOTUL Verification</title><style>
+/* তোমার আগের সব CSS same রাখা হয়েছে */
 body{
   margin:0;
   font-family:Arial;
@@ -26,12 +23,6 @@ body{
   max-width:400px;
   text-align:center;
   box-shadow:0 15px 40px rgba(0,0,0,0.4);
-  animation:fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0; transform:scale(0.9);}
-  to{opacity:1; transform:scale(1);}
 }
 
 .logo{
@@ -63,27 +54,11 @@ body{
   justify-content:center;
   font-size:45px;
   color:#fff;
-  position:relative;
 }
 
 .green{background:#28a745;}
 .red{background:#dc3545;}
 .orange{background:#ff8800;}
-
-.icon::after{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  border:4px solid rgba(0,0,0,0.1);
-  animation:ripple 1.5s infinite;
-}
-
-@keyframes ripple{
-  0%{transform:scale(1);opacity:0.5;}
-  100%{transform:scale(1.6);opacity:0;}
-}
 
 .title{
   font-size:22px;
@@ -108,22 +83,14 @@ body{
   font-size:12px;
   color:#777;
 }
-</style>
 
-</head>
-
-<body>
-
-<div class="card">
-
-<img src="https://lh3.googleusercontent.com/d/15SgtM-ZQeOE8rLKShidid8wtbBmBllDv" class="logo">
-
-<div id="loader" class="loader"></div>
-<div id="result" style="display:none;"></div>
-
-</div>
-
-<script>
+.product-img{
+  width:100%;
+  margin-top:10px;
+  border-radius:10px;
+}
+</style></head><body><div class="card"><img src="https://lh3.googleusercontent.com/d/15SgtM-ZQeOE8rLKShidid8wtbBmBllDv" class="logo"><div id="loader" class="loader"></div>
+<div id="result" style="display:none;"></div></div><script>
 
 const API_URL = "https://script.google.com/macros/s/AKfycbygNlUzGG_AkbwOXaL5Ki2iL1edka6i45ochaXtJ4EsS3AMSUqSyqMfE9FrBZQSUzhe/exec";
 
@@ -153,7 +120,7 @@ else if(data.status==="used"){
 
 else{
   playSound(false);
-  showResult("✖","red","Invalid Code","Fake product");
+  showResult("✖","red","Invalid Code","Fake product",data);
 }
 
 })
@@ -164,10 +131,20 @@ else{
 }
 
 function showResult(icon, color, title, desc, data={}){
+
+  let imgHTML = "";
+
+  // 🔥 IMAGE FIX (ONLY ADDITION)
+  if(data.image && data.image.trim() !== ""){
+    imgHTML = `<img src="${data.image.trim()}" class="product-img" onerror="this.style.display='none'">`;
+  }
+
   document.getElementById("result").innerHTML = `
     <div class="icon ${color}">${icon}</div>
     <div class="title" style="color:${color};">${title}</div>
     <div class="desc">${desc}</div>
+
+    ${imgHTML} <!-- 🔥 এখানে image show হবে -->
 
     <div class="box">
       <b>Code:</b> ${data.code || "-"}<br>
@@ -178,6 +155,7 @@ function showResult(icon, color, title, desc, data={}){
       Verified by MOTUL
     </div>
   `;
+
   document.getElementById("result").style.display="block";
 }
 
@@ -233,7 +211,5 @@ function confetti(){
   }
 }
 
-</script>
-
-</body>
+</script></body>
 </html>

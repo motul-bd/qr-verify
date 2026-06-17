@@ -1,1 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOTUL Verification</title>
 
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:#fff;
+}
+
+.card{
+  background:#ffffff;
+  color:#000;
+  padding:25px;
+  border-radius:20px;
+  width:95%;
+  max-width:400px;
+  text-align:center;
+  box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+
+.logo{
+  width:110px;
+  margin-bottom:10px;
+}
+
+.loader{
+  width:60px;
+  height:60px;
+  border:5px solid #eee;
+  border-top:5px solid #28a745;
+  border-radius:50%;
+  margin:20px auto;
+  animation:spin 0.7s linear infinite;
+}
+
+@keyframes spin{
+  100%{transform:rotate(360deg);}
+}
+
+.icon{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  margin:15px auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:45px;
+  color:#fff;
+}
+
+.green{background:#28a745;}
+.red{background:#dc3545;}
+.orange{background:#ff8800;}
+
+.title{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.desc{
+  font-size:14px;
+  color:#555;
+}
+
+.product-img{
+  width:120px;
+  margin-top:10px;
+  border-radius:10px;
+}
+
+.box{
+  background:#f8f8f8;
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
+  text-align:left;
+}
+
+.footer{
+  margin-top:10px;
+  font-size:12px;
+  color:#777;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<img src="https://lh3.googleusercontent.com/d/15SgtM-ZQeOE8rLKShidid8wtbBmBllDv" class="logo">
+
+<div id="loader" class="loader"></div>
+<div id="result" style="display:none;"></div>
+
+</div>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxks6lH1kfU22paJ-i4BfSNoutOmG0hRqbub3PQdsuVys3LkvV6T1japjYwwqSrrRaW/exec";
+
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+
+if(!code){
+  showError("No Code Found");
+}else{
+
+fetch(API_URL + "?code=" + code)
+.then(res => res.json())
+.then(data => {
+
+document.getElementById("loader").style.display="none";
+
+if(data.status==="success"){
+  playSound(true);
+  showResult("✔","green","Genuine Product","Product is authentic",data);
+}
+
+else if(data.status==="used"){
+  playSound(false);
+  showResult("!","orange","Already Verified","This code already used",data);
+}
+
+else{
+  playSound(false);
+  showResult("✖","red","Invalid Code","Fake product");
+}
+
+})
+.catch(()=>{
+  showError("Server Error");
+});
+
+}
+
+// ✅ FINAL RESULT FUNCTION (IMAGE INCLUDED)
+function showResult(icon, color, title, desc, data={}){
+
+  let imageHTML = "";
+  if(data.image){
+    imageHTML = `<img src="${data.image}" class="product-img">`;
+  }
+
+  document.getElementById("result").innerHTML = `
+    <div class="icon ${color}">${icon}</div>
+    <div class="title" style="color:${color};">${title}</div>
+    <div class="desc">${desc}</div>
+
+    ${imageHTML}
+
+    <div class="box">
+      <b>Code:</b> ${data.code || "-"}<br>
+      <b>Product:</b> ${data.product || "-"}
+    </div>
+
+    <div class="footer">
+      Verified by MOTUL
+    </div>
+  `;
+
+  document.getElementById("result").style.display="block";
+}
+
+function showError(msg){
+  document.getElementById("loader").style.display="none";
+  document.getElementById("result").innerHTML = "<h3>"+msg+"</h3>";
+  document.getElementById("result").style.display="block";
+}
+
+function playSound(success){
+  let audio = new Audio(success
+    ? "https://www.soundjay.com/buttons/sounds/button-3.mp3"
+    : "https://www.soundjay.com/buttons/sounds/button-10.mp3");
+  audio.play();
+}
+
+</script>
+
+</body>
+</html>

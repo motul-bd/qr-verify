@@ -1,35 +1,35 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>QR Product Verification</title>
+  <title>QR Verify</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: #0f172a;
-      color: white;
-      text-align: center;
-      padding: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
     }
 
-    .box {
+    .card {
       background: #1e293b;
       padding: 30px;
-      border-radius: 10px;
-      display: inline-block;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      border-radius: 15px;
+      text-align: center;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
 
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    .result {
-      font-size: 24px;
-      margin-top: 20px;
+    .icon {
+      font-size: 40px;
+      margin-bottom: 10px;
     }
 
     .success {
@@ -39,49 +39,70 @@
     .error {
       color: #ef4444;
     }
+
+    h2 {
+      margin: 10px 0;
+    }
+
+    p {
+      font-size: 14px;
+      opacity: 0.8;
+    }
   </style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h1>🔍 Verifying Product...</h1>
-    <div id="result" class="result">Please wait...</div>
-  </div>
+<div class="card" id="card">
+  <div class="icon">🔍</div>
+  <h2>Verifying Product...</h2>
+  <p>Please wait</p>
+</div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxFOoUf5zBeCoew0FxXnGSR2mQQfisLaNxFhnrtN2OxojZFRwjpK6fmDl-xLN678a6w/exec";
 
-    if (!code) {
-      document.getElementById("result").innerHTML = "❌ No Code Provided";
-      document.getElementById("result").classList.add("error");
-    } else {
+const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get("code");
 
-      fetch("https://script.google.com/macros/s/AKfycbxFOoUf5zBeCoew0FxXnGSR2mQQfisLaNxFhnrtN2OxojZFRwjpK6fmDl-xLN678a6w/exec?code=" + code)
-        .then(res => res.json())
-        .then(data => {
+const card = document.getElementById("card");
 
-          if (data.status === "success") {
-            document.getElementById("result").innerHTML = "✅ " + data.message;
-            document.getElementById("result").classList.add("success");
+if (!code) {
+  card.innerHTML = `
+    <div class="icon error">❌</div>
+    <h2>Invalid QR</h2>
+    <p>No code found</p>
+  `;
+} else {
 
-          } else if (data.status === "invalid") {
-            document.getElementById("result").innerHTML = "❌ " + data.message;
-            document.getElementById("result").classList.add("error");
+  fetch(API_URL + "?code=" + code)
+    .then(res => res.json())
+    .then(data => {
 
-          } else {
-            document.getElementById("result").innerHTML = "⚠️ " + data.message;
-            document.getElementById("result").classList.add("error");
-          }
+      if (data.status === "success") {
+        card.innerHTML = `
+          <div class="icon success">✅</div>
+          <h2>Verified</h2>
+          <p>${data.message}</p>
+        `;
+      } else {
+        card.innerHTML = `
+          <div class="icon error">❌</div>
+          <h2>Not Valid</h2>
+          <p>${data.message}</p>
+        `;
+      }
 
-        })
-        .catch(err => {
-          document.getElementById("result").innerHTML = "❌ Server Error";
-          document.getElementById("result").classList.add("error");
-        });
-
-    }
-  </script>
+    })
+    .catch(err => {
+      card.innerHTML = `
+        <div class="icon error">❌</div>
+        <h2>Server Error</h2>
+        <p>API not responding</p>
+      `;
+    });
+}
+</script>
 
 </body>
 </html>

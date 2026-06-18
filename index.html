@@ -9,13 +9,11 @@
 body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; overflow:hidden; }
 .card { background:#fff; padding:30px 20px 25px; border-radius:12px; width:100%; max-width:340px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.08); position:relative; z-index:2; }
 
-/* আপনার MOTUL LOGO - সবসময় উপরে */
-.logo { width:70px; margin:0 auto 18px; display:block; }
+.logo { width:120px; height:auto; margin:0 auto 18px; display:block; border-radius:4px; }
 
-.spinner { width:60px; height:60px; border:3px solid #e0e0e0; border-top:3px solid #28a745; border-radius:50%; margin:25px auto; animation:spin 0.8s linear infinite; }
+.spinner { width:60px; height:60px; border:3px solid #e0e0e0; border-top:3px solid #28a745; border-radius:50%; margin:25px auto; animation:spin 0.6s linear infinite; }
 @keyframes spin { 100%{ transform:rotate(360deg); } }
 
-/* টিক + রিপল - স্ক্রিনশট এর মতো */
 .icon-wrap { width:85px; height:85px; background:#28a745; border-radius:50%; margin:12px auto 15px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 0 0 8px rgba(40,167,69,0.1); }
 .icon-wrap.orange { background:#ff8800; box-shadow:0 0 0 8px rgba(255,136,0,0.1); }
 .icon-wrap::before, .icon-wrap::after { 
@@ -25,9 +23,9 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
   height:100%; 
   border-radius:50%; 
   border:2px solid #28a745; 
-  animation:ripple 1.8s infinite; 
+  animation:ripple 1.5s infinite; 
 }
-.icon-wrap::after { animation-delay:0.6s; }
+.icon-wrap::after { animation-delay:0.5s; }
 .icon-wrap.orange::before, .icon-wrap.orange::after { border-color:#ff8800; }
 @keyframes ripple { 0%{ transform:scale(1); opacity:0.6; } 100%{ transform:scale(1.5); opacity:0; } }
 .icon { font-size:42px; color:#fff; font-weight:bold; position:relative; z-index:2; }
@@ -49,15 +47,13 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
 .error { color:#dc3545; font-size:15px; font-weight:600; margin-top:20px; }
 .hidden { display:none; }
 
-/* 🎉 কনফেটি আতশবাজি */
 .confetti { position:absolute; width:8px; height:8px; animation:fall 3s linear forwards; z-index:1; border-radius:2px; }
 @keyframes fall { 0%{ transform:translateY(-100px) rotate(0deg); opacity:1; } 100%{ transform:translateY(100vh) rotate(720deg); opacity:0; } }
 </style>
 </head>
 <body>
 <div class="card" id="card">
-  <!-- আপনার Google Drive Logo - সবসময় দেখাবে -->
-  <img src="https://drive.google.com/uc?export=view&id=15SgtM-ZQeOE8rLKShid8wtbBmBllDv" class="logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Motul_logo.svg/320px-Motul_logo.svg.png'">
+  <img src="attachment://27316859934634999" class="logo">
   
   <div id="loading">
     <div class="spinner"></div>
@@ -81,7 +77,7 @@ if (!code) {
       .then(res => res.json())
       .then(data => showResult(data))
       .catch(err => showError("Connection Error"));
-  }, 800);
+  }, 200); // লোডিং 0.2 সেকেন্ড
 }
 
 function showResult(data) {
@@ -116,7 +112,6 @@ function showResult(data) {
     <div class="footer">${data.footer}</div>
   `;
 
-  // প্রথমবার ভেরিফাই হলেই 🎉 কনফেটি
   if (isVerified) {
     fireConfetti();
   }

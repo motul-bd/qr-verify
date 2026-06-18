@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,23 +9,15 @@
 body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
 .card { background:#fff; padding:25px 20px; border-radius:12px; width:100%; max-width:300px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.08); }
 
-/* লোগো - 80px তে পুরা MOTUL দেখাবে, কাটবে না */
-.logo { width:80px; height:auto; margin:0 auto 15px; display:block; }
+/* ম্যাজিক লাইন: object-fit:contain */
+.logo { width:100px; height:40px; margin:0 auto 15px; display:block; object-fit:contain; }
 
 .spinner { width:50px; height:50px; border:4px solid #f0f0f0; border-top:4px solid #28a745; border-radius:50%; margin:15px auto; animation:spin 0.6s linear infinite; }
 @keyframes spin { 100%{ transform:rotate(360deg); } }
 
 .icon-wrap { width:75px; height:75px; background:#28a745; border-radius:50%; margin:10px auto 12px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 0 0 6px rgba(40,167,69,0.1); }
 .icon-wrap.orange { background:#ff8800; box-shadow:0 0 0 6px rgba(255,136,0,0.1); }
-.icon-wrap::before, .icon-wrap::after { 
-  content:''; 
-  position:absolute; 
-  width:100%; 
-  height:100%; 
-  border-radius:50%; 
-  border:2px solid #28a745; 
-  animation:ripple 1.2s infinite; 
-}
+.icon-wrap::before, .icon-wrap::after { content:''; position:absolute; width:100%; height:100%; border-radius:50%; border:2px solid #28a745; animation:ripple 1.2s infinite; }
 .icon-wrap::after { animation-delay:0.4s; }
 .icon-wrap.orange::before, .icon-wrap.orange::after { border-color:#ff8800; }
 @keyframes ripple { 0%{ transform:scale(1); opacity:0.6; } 100%{ transform:scale(1.4); opacity:0; } }
@@ -54,7 +46,6 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
 </head>
 <body>
 <div class="card" id="card">
-  <!-- Direct লিঙ্ক - i.ibb.co.com + /image.png -->
   <img src="https://i.ibb.co.com/1GS7k85d/image.png" class="logo">
   
   <div id="loading"><div class="spinner"></div></div>
@@ -63,8 +54,6 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzzzOeUHOh6nwZlbR7YttY3Ho2FhJOWGsPhsQXu50iEROm4DS-Epbbr28J-YkRYPiA/exec";
-
-// QR কোড থেকে serial ধরার জন্য
 const urlParams = new URLSearchParams(window.location.search);
 const code = urlParams.get('code');
 const loading = document.getElementById('loading');
@@ -73,7 +62,6 @@ const result = document.getElementById('result');
 if (!code) {
   showError("No Serial Number Found");
 } else {
-  // লোডিং 0ms - সাথে API কল
   fetch(API_URL + "?code=" + encodeURIComponent(code))
     .then(res => res.json())
     .then(data => showResult(data))
@@ -83,25 +71,17 @@ if (!code) {
 function showResult(data) {
   loading.classList.add('hidden');
   result.classList.remove('hidden');
-
-  if (!data.success) {
-    showError(data.message);
-    return;
-  }
-
+  if (!data.success) { showError(data.message); return; }
   const isVerified = data.verified;
-  const iconClass = isVerified ? '' : 'orange';
-  const titleClass = isVerified ? 'title' : 'title orange';
-  const lineClass = isVerified ? 'line' : 'line orange';
-  const iconSymbol = isVerified ? '✓' : '!';
-
+  const iconClass = isVerified? '' : 'orange';
+  const titleClass = isVerified? 'title' : 'title orange';
+  const lineClass = isVerified? 'line' : 'line orange';
+  const iconSymbol = isVerified? '✓' : '!';
   result.innerHTML = `
-    <div class="icon-wrap ${iconClass}">
-      <div class="icon">${iconSymbol}</div>
-    </div>
+    <div class="icon-wrap ${iconClass}"><div class="icon">${iconSymbol}</div></div>
     <div class="${titleClass}">${data.status}</div>
     <div class="desc">${data.message}</div>
-    ${data.image ? `<img class="product-img" src="${data.image}" loading="eager" onerror="this.style.display='none'">` : ''}
+    ${data.image? `<img class="product-img" src="${data.image}" loading="eager" onerror="this.style.display='none'">` : ''}
     <div class="box">
       <div class="label">Serial Number</div>
       <div class="value">${data.serial}</div>
@@ -111,13 +91,8 @@ function showResult(data) {
     <div class="${lineClass}"></div>
     <div class="footer">${data.footer}</div>
   `;
-
-  // প্রথমবার ভেরিফাই হলে কনফেটি
-  if (isVerified) {
-    fireConfetti();
-  }
+  if (isVerified) { fireConfetti(); }
 }
-
 function fireConfetti() {
   const colors = ['#ff0', '#0f0', '#00f', '#f0f', '#ff8800', '#28a745', '#ff0000', '#ff69b4'];
   for (let i = 0; i < 80; i++) {
@@ -133,7 +108,6 @@ function fireConfetti() {
     }, i * 30);
   }
 }
-
 function showError(msg) {
   loading.classList.add('hidden');
   result.classList.remove('hidden');

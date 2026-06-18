@@ -6,34 +6,58 @@
 <title>Motul Verification</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:Arial; background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; overflow:hidden; }
-.card { background:#fff; padding:40px 25px; border-radius:16px; width:95%; max-width:380px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.1); position:relative; z-index:2; }
-.logo { width:90px; margin:0 auto 25px; display:block; }
-.spinner { width:70px; height:70px; border:4px solid #e0e0e0; border-top:4px solid #28a745; border-radius:50%; margin:40px auto; animation:spin 0.8s linear infinite; }
+body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; overflow:hidden; }
+.card { background:#fff; padding:30px 20px 25px; border-radius:12px; width:100%; max-width:340px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.08); position:relative; z-index:2; }
+
+/* আপনার MOTUL LOGO - সবসময় উপরে */
+.logo { width:70px; margin:0 auto 18px; display:block; }
+
+.spinner { width:60px; height:60px; border:3px solid #e0e0e0; border-top:3px solid #28a745; border-radius:50%; margin:25px auto; animation:spin 0.8s linear infinite; }
 @keyframes spin { 100%{ transform:rotate(360deg); } }
-.icon-wrap { width:90px; height:90px; background:#28a745; border-radius:50%; margin:15px auto; display:flex; align-items:center; justify-content:center; }
-.icon { font-size:50px; color:#fff; }
-.title { font-size:20px; font-weight:bold; color:#28a745; margin:8px 0; }
-.desc { font-size:13px; color:#666; margin-bottom:20px; }
-.product-img { width:180px; margin:20px auto; display:block; }
-.box { background:#f8f9fa; padding:15px; border-radius:8px; text-align:left; margin-top:15px; }
-.label { color:#999; font-size:12px; margin-top:8px; }
-.value { font-weight:bold; font-size:14px; margin-bottom:5px; }
-.footer { margin-top:20px; font-size:12px; color:#888; }
-.line { height:2px; background:#28a745; margin-top:15px; }
-.error { color:#dc3545; font-size:16px; font-weight:bold; margin-top:40px; }
-.orange { background:#ff8800 !important; }
-.title.orange { color:#ff8800 !important; }
-.line.orange { background:#ff8800 !important; }
+
+/* টিক + রিপল - স্ক্রিনশট এর মতো */
+.icon-wrap { width:85px; height:85px; background:#28a745; border-radius:50%; margin:12px auto 15px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 0 0 8px rgba(40,167,69,0.1); }
+.icon-wrap.orange { background:#ff8800; box-shadow:0 0 0 8px rgba(255,136,0,0.1); }
+.icon-wrap::before, .icon-wrap::after { 
+  content:''; 
+  position:absolute; 
+  width:100%; 
+  height:100%; 
+  border-radius:50%; 
+  border:2px solid #28a745; 
+  animation:ripple 1.8s infinite; 
+}
+.icon-wrap::after { animation-delay:0.6s; }
+.icon-wrap.orange::before, .icon-wrap.orange::after { border-color:#ff8800; }
+@keyframes ripple { 0%{ transform:scale(1); opacity:0.6; } 100%{ transform:scale(1.5); opacity:0; } }
+.icon { font-size:42px; color:#fff; font-weight:bold; position:relative; z-index:2; }
+
+.title { font-size:18px; font-weight:600; color:#28a745; margin:5px 0 3px; }
+.title.orange { color:#ff8800; }
+.desc { font-size:12px; color:#777; margin-bottom:18px; line-height:1.4; }
+
+.product-img { width:160px; margin:18px auto; display:block; }
+
+.box { background:#fafafa; padding:14px 12px; border-radius:8px; text-align:left; margin-top:15px; }
+.label { color:#999; font-size:11px; margin-top:6px; margin-bottom:2px; }
+.value { font-weight:600; font-size:13px; color:#333; margin-bottom:6px; }
+
+.line { height:3px; background:#28a745; margin-top:18px; border-radius:2px; }
+.line.orange { background:#ff8800; }
+
+.footer { margin-top:12px; font-size:11px; color:#999; line-height:1.5; }
+.error { color:#dc3545; font-size:15px; font-weight:600; margin-top:20px; }
 .hidden { display:none; }
-/* কনফেটি */
-.confetti { position:absolute; width:10px; height:10px; background:#ff0; animation:fall 3s linear forwards; z-index:1; }
+
+/* 🎉 কনফেটি আতশবাজি */
+.confetti { position:absolute; width:8px; height:8px; animation:fall 3s linear forwards; z-index:1; border-radius:2px; }
 @keyframes fall { 0%{ transform:translateY(-100px) rotate(0deg); opacity:1; } 100%{ transform:translateY(100vh) rotate(720deg); opacity:0; } }
 </style>
 </head>
 <body>
 <div class="card" id="card">
-  <img src="https://drive.google.com/uc?export=view&id=15SgtM-ZQeOE8rLKShid8wtbBmBllDv" class="logo" onerror="this.style.display='none'">
+  <!-- আপনার Google Drive Logo - সবসময় দেখাবে -->
+  <img src="https://drive.google.com/uc?export=view&id=15SgtM-ZQeOE8rLKShid8wtbBmBllDv" class="logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Motul_logo.svg/320px-Motul_logo.svg.png'">
   
   <div id="loading">
     <div class="spinner"></div>
@@ -73,10 +97,11 @@ function showResult(data) {
   const iconClass = isVerified? '' : 'orange';
   const titleClass = isVerified? 'title' : 'title orange';
   const lineClass = isVerified? 'line' : 'line orange';
+  const iconSymbol = isVerified? '✓' : '!';
 
   result.innerHTML = `
     <div class="icon-wrap ${iconClass}">
-      <div class="icon">${isVerified? '✓' : '!'}</div>
+      <div class="icon">${iconSymbol}</div>
     </div>
     <div class="${titleClass}">${data.status}</div>
     <div class="desc">${data.message}</div>
@@ -91,24 +116,25 @@ function showResult(data) {
     <div class="footer">${data.footer}</div>
   `;
 
-  // প্রথমবার ভেরিফাই হলে আতশবাজি
-  if (isVerified && data.message.includes("First time")) {
+  // প্রথমবার ভেরিফাই হলেই 🎉 কনফেটি
+  if (isVerified) {
     fireConfetti();
   }
 }
 
 function fireConfetti() {
-  const colors = ['#ff0', '#0f0', '#00f', '#f0f', '#ff8800', '#28a745'];
-  for (let i = 0; i < 80; i++) {
+  const colors = ['#ff0', '#0f0', '#00f', '#f0f', '#ff8800', '#28a745', '#ff0000', '#ff69b4'];
+  for (let i = 0; i < 100; i++) {
     setTimeout(() => {
       const confetti = document.createElement('div');
       confetti.className = 'confetti';
       confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.top = '-20px';
       confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
       confetti.style.animationDelay = Math.random() * 0.5 + 's';
       document.body.appendChild(confetti);
       setTimeout(() => confetti.remove(), 3000);
-    }, i * 30);
+    }, i * 25);
   }
 }
 

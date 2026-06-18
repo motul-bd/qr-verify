@@ -6,16 +6,18 @@
 <title>Motul Verification</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; overflow:hidden; }
-.card { background:#fff; padding:30px 20px 25px; border-radius:12px; width:100%; max-width:340px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.08); position:relative; z-index:2; }
+body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+.card { background:#fff; padding:25px 20px; border-radius:12px; width:100%; max-width:300px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.08); }
 
-.logo { width:120px; height:auto; margin:0 auto 18px; display:block; border-radius:4px; }
+/* ছোট লোগো - স্ক্রিনশট এর মতো */
+.logo { width:65px; height:auto; margin:0 auto 15px; display:block; }
 
-.spinner { width:60px; height:60px; border:3px solid #e0e0e0; border-top:3px solid #28a745; border-radius:50%; margin:25px auto; animation:spin 0.6s linear infinite; }
+/* স্ক্রিনশট এর মতো স্পিনার */
+.spinner { width:50px; height:50px; border:4px solid #f0f0f0; border-top:4px solid #28a745; border-radius:50%; margin:15px auto; animation:spin 0.8s linear infinite; }
 @keyframes spin { 100%{ transform:rotate(360deg); } }
 
-.icon-wrap { width:85px; height:85px; background:#28a745; border-radius:50%; margin:12px auto 15px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 0 0 8px rgba(40,167,69,0.1); }
-.icon-wrap.orange { background:#ff8800; box-shadow:0 0 0 8px rgba(255,136,0,0.1); }
+.icon-wrap { width:75px; height:75px; background:#28a745; border-radius:50%; margin:10px auto 12px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 0 0 6px rgba(40,167,69,0.1); }
+.icon-wrap.orange { background:#ff8800; box-shadow:0 0 0 6px rgba(255,136,0,0.1); }
 .icon-wrap::before, .icon-wrap::after { 
   content:''; 
   position:absolute; 
@@ -27,33 +29,33 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
 }
 .icon-wrap::after { animation-delay:0.5s; }
 .icon-wrap.orange::before, .icon-wrap.orange::after { border-color:#ff8800; }
-@keyframes ripple { 0%{ transform:scale(1); opacity:0.6; } 100%{ transform:scale(1.5); opacity:0; } }
-.icon { font-size:42px; color:#fff; font-weight:bold; position:relative; z-index:2; }
+@keyframes ripple { 0%{ transform:scale(1); opacity:0.6; } 100%{ transform:scale(1.4); opacity:0; } }
+.icon { font-size:38px; color:#fff; font-weight:bold; position:relative; z-index:2; }
 
-.title { font-size:18px; font-weight:600; color:#28a745; margin:5px 0 3px; }
+.title { font-size:16px; font-weight:600; color:#28a745; margin:3px 0 2px; }
 .title.orange { color:#ff8800; }
-.desc { font-size:12px; color:#777; margin-bottom:18px; line-height:1.4; }
+.desc { font-size:11px; color:#777; margin-bottom:15px; line-height:1.4; }
 
-.product-img { width:160px; margin:18px auto; display:block; }
+.product-img { width:140px; margin:15px auto; display:block; }
 
-.box { background:#fafafa; padding:14px 12px; border-radius:8px; text-align:left; margin-top:15px; }
-.label { color:#999; font-size:11px; margin-top:6px; margin-bottom:2px; }
-.value { font-weight:600; font-size:13px; color:#333; margin-bottom:6px; }
+.box { background:#fafafa; padding:12px 10px; border-radius:6px; text-align:left; margin-top:12px; }
+.label { color:#999; font-size:10px; margin-top:5px; margin-bottom:1px; }
+.value { font-weight:600; font-size:12px; color:#333; margin-bottom:5px; }
 
-.line { height:3px; background:#28a745; margin-top:18px; border-radius:2px; }
+.line { height:2px; background:#28a745; margin-top:15px; border-radius:2px; }
 .line.orange { background:#ff8800; }
 
-.footer { margin-top:12px; font-size:11px; color:#999; line-height:1.5; }
-.error { color:#dc3545; font-size:15px; font-weight:600; margin-top:20px; }
+.footer { margin-top:10px; font-size:10px; color:#999; line-height:1.4; }
+.error { color:#dc3545; font-size:14px; font-weight:600; margin-top:15px; }
 .hidden { display:none; }
 
-.confetti { position:absolute; width:8px; height:8px; animation:fall 3s linear forwards; z-index:1; border-radius:2px; }
+.confetti { position:absolute; width:7px; height:7px; animation:fall 3s linear forwards; z-index:1; border-radius:2px; }
 @keyframes fall { 0%{ transform:translateY(-100px) rotate(0deg); opacity:1; } 100%{ transform:translateY(100vh) rotate(720deg); opacity:0; } }
 </style>
 </head>
 <body>
 <div class="card" id="card">
-  <!-- আপনার imgbb লাল MOTUL লোগো -->
+  <!-- ছোট লাল MOTUL লোগো - সবসময় উপরে -->
   <img src="https://i.ibb.co.com/1GS7k85d/image.png" class="logo">
   
   <div id="loading">
@@ -120,7 +122,7 @@ function showResult(data) {
 
 function fireConfetti() {
   const colors = ['#ff0', '#0f0', '#00f', '#f0f', '#ff8800', '#28a745', '#ff0000', '#ff69b4'];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 80; i++) {
     setTimeout(() => {
       const confetti = document.createElement('div');
       confetti.className = 'confetti';
@@ -130,7 +132,7 @@ function fireConfetti() {
       confetti.style.animationDelay = Math.random() * 0.5 + 's';
       document.body.appendChild(confetti);
       setTimeout(() => confetti.remove(), 3000);
-    }, i * 25);
+    }, i * 30);
   }
 }
 

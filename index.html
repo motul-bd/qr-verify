@@ -8,28 +8,25 @@
 body{
   margin:0;
   font-family:Arial;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  background:#f2f2f2;
   display:flex;
   justify-content:center;
   align-items:center;
   height:100vh;
-  color:#fff;
 }
 
 .card{
-  background:#ffffff;
-  color:#000;
-  padding:25px;
-  border-radius:20px;
+  background:#fff;
+  padding:25px 20px;
+  border-radius:18px;
   width:95%;
-  max-width:400px;
+  max-width:420px;
   text-align:center;
-  box-shadow:0 15px 40px rgba(0,0,0,0.4);
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
 }
 
-.logo{
+.top-logo{
   width:110px;
-  margin-bottom:10px;
 }
 
 .loader{
@@ -39,28 +36,51 @@ body{
   border-top:5px solid #28a745;
   border-radius:50%;
   margin:20px auto;
-  animation:spin 0.7s linear infinite;
+  animation:spin 0.6s linear infinite;
 }
 
 @keyframes spin{
-  100%{transform:rotate(360deg);}
+  100%{ transform:rotate(360deg); }
 }
 
 .icon{
-  width:100px;
-  height:100px;
+  width:110px;
+  height:110px;
   border-radius:50%;
-  margin:15px auto;
+  margin:20px auto;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:45px;
+  font-size:50px;
   color:#fff;
+  position:relative;
 }
 
-.green{background:#28a745;}
-.red{background:#dc3545;}
-.orange{background:#ff8800;}
+.green{ background:#28a745; }
+.orange{ background:#ff8800; }
+
+.icon::before,
+.icon::after{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  border:4px solid rgba(0,0,0,0.1);
+  animation:ripple 1.5s infinite;
+}
+
+.icon::after{ animation-delay:0.6s; }
+
+@keyframes ripple{
+  0%{ transform:scale(1); opacity:0.6;}
+  100%{ transform:scale(1.8); opacity:0;}
+}
+
+.product-img{
+  width:220px;
+  margin:15px auto;
+}
 
 .title{
   font-size:22px;
@@ -68,28 +88,20 @@ body{
 }
 
 .desc{
-  font-size:14px;
-  color:#555;
-}
-
-.product-img{
-  width:120px;
-  margin-top:10px;
-  border-radius:10px;
+  color:#666;
 }
 
 .box{
-  background:#f8f8f8;
+  background:#fafafa;
   padding:12px;
   border-radius:10px;
   margin-top:10px;
-  text-align:left;
 }
 
 .footer{
   margin-top:10px;
-  font-size:12px;
-  color:#777;
+  font-size:13px;
+  color:#666;
 }
 </style>
 
@@ -99,91 +111,124 @@ body{
 
 <div class="card">
 
-<img src="https://lh3.googleusercontent.com/d/15SgtM-ZQeOE8rLKShidid8wtbBmBllDv" class="logo">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Motul_logo.png" class="top-logo">
 
 <div id="loader" class="loader"></div>
-<div id="result" style="display:none;"></div>
+<div id="content" style="display:none;"></div>
 
 </div>
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxks6lH1kfU22paJ-i4BfSNoutOmG0hRqbub3PQdsuVys3LkvV6T1japjYwwqSrrRaW/exec";
+// 👉 আপনার ডাটা এখানে বসাবেন
+const DATA = [
+  {code:"A101", product:"Motul Engine Oil", image:"https://i.ibb.co/xxxx/product.jpg"},
+  {code:"A102", product:"Motul Gear Oil", image:"https://i.ibb.co/yyyy/product.jpg"}
+];
 
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-if(!code){
-  showError("No Code Found");
-}else{
+const loader = document.getElementById("loader");
+const content = document.getElementById("content");
 
-fetch(API_URL + "?code=" + code)
-.then(res => res.json())
-.then(data => {
+setTimeout(()=>{
 
-document.getElementById("loader").style.display="none";
+  loader.style.display="none";
+  content.style.display="block";
 
-if(data.status==="success"){
-  playSound(true);
-  showResult("✔","green","Genuine Product","Product is authentic",data);
-}
-
-else if(data.status==="used"){
-  playSound(false);
-  showResult("!","orange","Already Verified","This code already used",data);
-}
-
-else{
-  playSound(false);
-  showResult("✖","red","Invalid Code","Fake product");
-}
-
-})
-.catch(()=>{
-  showError("Server Error");
-});
-
-}
-
-// ✅ FINAL RESULT FUNCTION (IMAGE INCLUDED)
-function showResult(icon, color, title, desc, data={}){
-
-  let imageHTML = "";
-  if(data.image){
-    imageHTML = `<img src="${data.image}" class="product-img">`;
+  if(!code){
+    content.innerHTML="<h2 style='color:red'>No Code Found</h2>";
+    return;
   }
 
-  document.getElementById("result").innerHTML = `
-    <div class="icon ${color}">${icon}</div>
-    <div class="title" style="color:${color};">${title}</div>
-    <div class="desc">${desc}</div>
+  const item = DATA.find(x => x.code === code);
 
-    ${imageHTML}
+  if(!item){
+    content.innerHTML="<h2 style='color:red'>Invalid Code</h2>";
+    return;
+  }
 
-    <div class="box">
-      <b>Code:</b> ${data.code || "-"}<br>
-      <b>Product:</b> ${data.product || "-"}
-    </div>
+  let used = localStorage.getItem(code);
 
-    <div class="footer">
-      Verified by MOTUL
-    </div>
-  `;
+  if(used){
 
-  document.getElementById("result").style.display="block";
-}
+    content.innerHTML = `
+      <div class="icon orange">!</div>
+      <div class="title" style="color:#ff8800;">Already Verified</div>
+      <div class="desc">This code already used</div>
 
-function showError(msg){
-  document.getElementById("loader").style.display="none";
-  document.getElementById("result").innerHTML = "<h3>"+msg+"</h3>";
-  document.getElementById("result").style.display="block";
-}
+      <img class="product-img" src="${item.image}" onerror="this.style.display='none'">
 
-function playSound(success){
-  let audio = new Audio(success
-    ? "https://www.soundjay.com/buttons/sounds/button-3.mp3"
-    : "https://www.soundjay.com/buttons/sounds/button-10.mp3");
-  audio.play();
+      <div class="box">
+        <b>Code:</b> ${code}<br>
+        <b>Product:</b> ${item.product}
+      </div>
+
+      <div class="footer">Verified by MOTUL</div>
+    `;
+
+  } else {
+
+    localStorage.setItem(code,"used");
+
+    content.innerHTML = `
+      <div class="icon green">✔</div>
+      <div class="title" style="color:#28a745;">Genuine Product</div>
+      <div class="desc">Product is authentic</div>
+
+      <img class="product-img" src="${item.image}" onerror="this.style.display='none'">
+
+      <div class="box">
+        <b>Code:</b> ${code}<br>
+        <b>Product:</b> ${item.product}
+      </div>
+
+      <div class="footer">Verified by MOTUL</div>
+    `;
+
+    confetti();
+  }
+
+},700);
+
+// 🎉 animation
+function confetti(){
+  for(let i=0;i<50;i++){
+    let d=document.createElement("div");
+    d.style.position="fixed";
+    d.style.width="8px";
+    d.style.height="8px";
+    d.style.background="hsl("+Math.random()*360+",100%,50%)";
+    d.style.top="50%";
+    d.style.left="50%";
+    document.body.appendChild(d);
+
+    let angle=Math.random()*2*Math.PI;
+    let power=Math.random()*10+5;
+
+    let vx=Math.cos(angle)*power;
+    let vy=Math.sin(angle)*power;
+
+    let x=window.innerWidth/2;
+    let y=window.innerHeight/2;
+
+    let g=0.25;
+
+    let anim=setInterval(()=>{
+      x+=vx;
+      y+=vy;
+      vy+=g;
+
+      d.style.left=x+"px";
+      d.style.top=y+"px";
+
+      if(y>window.innerHeight){
+        clearInterval(anim);
+        d.remove();
+      }
+    },20);
+  }
 }
 
 </script>

@@ -9,11 +9,9 @@
 body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
 .card { background:#fff; padding:25px 20px; border-radius:12px; width:100%; max-width:300px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.08); }
 
-/* ছোট লোগো - স্ক্রিনশট এর মতো */
-.logo { width:65px; height:auto; margin:0 auto 15px; display:block; }
+.logo { max-width:65px; height:auto; margin:0 auto 15px; display:block; }
 
-/* স্ক্রিনশট এর মতো স্পিনার */
-.spinner { width:50px; height:50px; border:4px solid #f0f0f0; border-top:4px solid #28a745; border-radius:50%; margin:15px auto; animation:spin 0.8s linear infinite; }
+.spinner { width:50px; height:50px; border:4px solid #f0f0f0; border-top:4px solid #28a745; border-radius:50%; margin:15px auto; animation:spin 0.6s linear infinite; }
 @keyframes spin { 100%{ transform:rotate(360deg); } }
 
 .icon-wrap { width:75px; height:75px; background:#28a745; border-radius:50%; margin:10px auto 12px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 0 0 6px rgba(40,167,69,0.1); }
@@ -25,9 +23,9 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
   height:100%; 
   border-radius:50%; 
   border:2px solid #28a745; 
-  animation:ripple 1.5s infinite; 
+  animation:ripple 1.2s infinite; 
 }
-.icon-wrap::after { animation-delay:0.5s; }
+.icon-wrap::after { animation-delay:0.4s; }
 .icon-wrap.orange::before, .icon-wrap.orange::after { border-color:#ff8800; }
 @keyframes ripple { 0%{ transform:scale(1); opacity:0.6; } 100%{ transform:scale(1.4); opacity:0; } }
 .icon { font-size:38px; color:#fff; font-weight:bold; position:relative; z-index:2; }
@@ -55,7 +53,6 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
 </head>
 <body>
 <div class="card" id="card">
-  <!-- ছোট লাল MOTUL লোগো - সবসময় উপরে -->
   <img src="https://i.ibb.co.com/1GS7k85d/image.png" class="logo">
   
   <div id="loading">
@@ -75,12 +72,13 @@ const result = document.getElementById('result');
 if (!code) {
   showError("No Serial Number Found");
 } else {
+  // লোডিং 0ms - সাথে API কল
   setTimeout(() => {
     fetch(API_URL + "?code=" + encodeURIComponent(code))
       .then(res => res.json())
       .then(data => showResult(data))
       .catch(err => showError("Connection Error"));
-  }, 200);
+  }, 0);
 }
 
 function showResult(data) {
@@ -104,7 +102,7 @@ function showResult(data) {
     </div>
     <div class="${titleClass}">${data.status}</div>
     <div class="desc">${data.message}</div>
-    ${data.image? `<img class="product-img" src="${data.image}" onerror="this.style.display='none'">` : ''}
+    ${data.image? `<img class="product-img" src="${data.image}" loading="eager" onerror="this.style.display='none'">` : ''}
     <div class="box">
       <div class="label">Serial Number</div>
       <div class="value">${data.serial}</div>

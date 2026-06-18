@@ -53,7 +53,8 @@ body { font-family:-apple-system, Arial, sans-serif; background:#f5f5f5; display
 </head>
 <body>
 <div class="card" id="card">
-  <img src="attachment://27316859934634999" class="logo">
+  <!-- আপনার imgbb লাল MOTUL লোগো -->
+  <img src="https://i.ibb.co.com/1GS7k85d/image.png" class="logo">
   
   <div id="loading">
     <div class="spinner"></div>
@@ -77,7 +78,7 @@ if (!code) {
       .then(res => res.json())
       .then(data => showResult(data))
       .catch(err => showError("Connection Error"));
-  }, 200); // লোডিং 0.2 সেকেন্ড
+  }, 200);
 }
 
 function showResult(data) {
